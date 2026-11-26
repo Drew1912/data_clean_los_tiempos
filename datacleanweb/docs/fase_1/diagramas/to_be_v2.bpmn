@@ -1,0 +1,403 @@
+<?xml version='1.0' encoding='utf-8'?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_ToBeV2" targetNamespace="https://los-tiempos.local/dataclean/bpmn" exporter="DataCleanWeb" exporterVersion="Fase 1 revision C-05">
+  <bpmn:collaboration id="Collaboration_DataClean">
+    <bpmn:participant id="Pool_LosTiempos" name="Editorial Los Tiempos - MVP de facturacion" processRef="Process_DataClean" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_DataClean" name="To-Be v2 - limpieza y consolidacion de cabeceras" isExecutable="false">
+    <bpmn:documentation>Modelo de analisis BPMN 2.0. RF-01 a RF-12. Sin conciliacion Ventas-Contabilidad. Ambas salidas se muestran en el recorrido de demostracion; API bajo demanda por separado. Sin validacion empresarial ni ejecucion de motor acreditadas.</bpmn:documentation>
+    <bpmn:laneSet id="LaneSet_Actores">
+      <bpmn:lane id="Lane_Cajas" name="Cajas">
+        <bpmn:flowNodeRef>Start</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Cargar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Filtros</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Contabilidad" name="Contabilidad">
+        <bpmn:flowNodeRef>Task_Procesar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Revisar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Descargar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Web" name="Sistema web (participante tecnico)">
+        <bpmn:flowNodeRef>Task_Estructura</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ExcluirEstructuras</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_Admitidos</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Leer</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Normalizar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Clasificar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Validar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Duplicados</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Consolidar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Resumen</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AplicarFiltros</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_Salidas</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Excel</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Observaciones</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_Unir</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Sistemas" name="Sistemas (soporte)">
+        <bpmn:flowNodeRef>Task_Soporte</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Rechazo</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Start" name="Inicio">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="Task_Cargar" name="Cargar Excel/CSV y elegir perfil">
+      <bpmn:documentation>RF-01</bpmn:documentation>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Task_Estructura" name="Validar perfil, hoja y encabezado; reconocer cabecera/detalle">
+      <bpmn:documentation>RF-01 RF-02</bpmn:documentation>
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_ExcluirEstructuras" name="Registrar rechazos y detalle fuera del consolidado">
+      <bpmn:documentation>RF-02 RF-08 RF-11</bpmn:documentation>
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Gateway_Admitidos" name="Hay cabeceras admitidas?" default="Flow_23">
+      <bpmn:documentation>RF-02</bpmn:documentation>
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+      <bpmn:outgoing>Flow_23</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="Task_Procesar" name="Solicitar procesamiento">
+      <bpmn:documentation>RF-07 RF-09</bpmn:documentation>
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Task_Leer" name="Leer cabeceras con archivo, hoja y fila">
+      <bpmn:documentation>RF-01 RF-07</bpmn:documentation>
+      <bpmn:incoming>Flow_6</bpmn:incoming>
+      <bpmn:outgoing>Flow_7</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_Normalizar" name="Normalizar solo formatos seguros">
+      <bpmn:documentation>RF-07</bpmn:documentation>
+      <bpmn:incoming>Flow_7</bpmn:incoming>
+      <bpmn:outgoing>Flow_8</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_Clasificar" name="Clasificar C/P y CAJA con patron y catalogo">
+      <bpmn:documentation>RF-03 RF-04</bpmn:documentation>
+      <bpmn:incoming>Flow_8</bpmn:incoming>
+      <bpmn:outgoing>Flow_9</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_Validar" name="Registrar errores bloqueantes sin inventar datos">
+      <bpmn:documentation>RF-08</bpmn:documentation>
+      <bpmn:incoming>Flow_9</bpmn:incoming>
+      <bpmn:outgoing>Flow_10</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_Duplicados" name="Senalar exactos y candidatos sin excluir por sospecha">
+      <bpmn:documentation>RF-08 RF-11</bpmn:documentation>
+      <bpmn:incoming>Flow_10</bpmn:incoming>
+      <bpmn:outgoing>Flow_11</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_Consolidar" name="Consolidar validos y conservar avisos de duplicidad">
+      <bpmn:documentation>RF-09</bpmn:documentation>
+      <bpmn:incoming>Flow_11</bpmn:incoming>
+      <bpmn:outgoing>Flow_12</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_Resumen" name="Calcular cargados, validos y observados sin doble conteo">
+      <bpmn:documentation>RF-12</bpmn:documentation>
+      <bpmn:incoming>Flow_12</bpmn:incoming>
+      <bpmn:outgoing>Flow_13</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="Task_Revisar" name="Consultar resumen e incidencias">
+      <bpmn:documentation>RF-11 RF-12</bpmn:documentation>
+      <bpmn:incoming>Flow_13</bpmn:incoming>
+      <bpmn:outgoing>Flow_14</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_Filtros" name="Seleccionar modalidad y departamento">
+      <bpmn:documentation>RF-05 RF-06</bpmn:documentation>
+      <bpmn:incoming>Flow_14</bpmn:incoming>
+      <bpmn:outgoing>Flow_15</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Task_AplicarFiltros" name="Aplicar filtros AND a cabeceras validas">
+      <bpmn:documentation>RF-05 RF-06</bpmn:documentation>
+      <bpmn:incoming>Flow_15</bpmn:incoming>
+      <bpmn:outgoing>Flow_16</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:parallelGateway id="Gateway_Salidas" name="Preparar las dos salidas">
+      <bpmn:documentation>RF-10 RF-11</bpmn:documentation>
+      <bpmn:incoming>Flow_16</bpmn:incoming>
+      <bpmn:outgoing>Flow_17</bpmn:outgoing>
+      <bpmn:outgoing>Flow_18</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:serviceTask id="Task_Excel" name="Generar Excel seleccionado y registrar exportados">
+      <bpmn:documentation>RF-10 RF-12</bpmn:documentation>
+      <bpmn:incoming>Flow_17</bpmn:incoming>
+      <bpmn:outgoing>Flow_19</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_Observaciones" name="Generar reporte separado de errores y avisos">
+      <bpmn:documentation>RF-11</bpmn:documentation>
+      <bpmn:incoming>Flow_18</bpmn:incoming>
+      <bpmn:outgoing>Flow_20</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:parallelGateway id="Gateway_Unir" name="Salidas listas">
+      <bpmn:documentation>RF-10 RF-11</bpmn:documentation>
+      <bpmn:incoming>Flow_19</bpmn:incoming>
+      <bpmn:incoming>Flow_20</bpmn:incoming>
+      <bpmn:outgoing>Flow_21</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:userTask id="Task_Descargar" name="Descargar resultados trazables">
+      <bpmn:documentation>RF-10 RF-11 RF-12</bpmn:documentation>
+      <bpmn:incoming>Flow_21</bpmn:incoming>
+      <bpmn:outgoing>Flow_22</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="End" name="Fin del procesamiento">
+      <bpmn:incoming>Flow_22</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="Task_Soporte" name="Revisar incidencia y permitir nueva carga">
+      <bpmn:documentation>RF-02 RF-11</bpmn:documentation>
+      <bpmn:incoming>Flow_23</bpmn:incoming>
+      <bpmn:outgoing>Flow_24</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="End_Rechazo" name="Fin: nueva carga necesaria">
+      <bpmn:incoming>Flow_24</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="Start" targetRef="Task_Cargar" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_Cargar" targetRef="Task_Estructura" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="Task_Estructura" targetRef="Task_ExcluirEstructuras" />
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="Task_ExcluirEstructuras" targetRef="Gateway_Admitidos" />
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="Gateway_Admitidos" targetRef="Task_Procesar" name="Si">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">cabeceras_admitidas &gt; 0</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="Task_Procesar" targetRef="Task_Leer" />
+    <bpmn:sequenceFlow id="Flow_7" sourceRef="Task_Leer" targetRef="Task_Normalizar" />
+    <bpmn:sequenceFlow id="Flow_8" sourceRef="Task_Normalizar" targetRef="Task_Clasificar" />
+    <bpmn:sequenceFlow id="Flow_9" sourceRef="Task_Clasificar" targetRef="Task_Validar" />
+    <bpmn:sequenceFlow id="Flow_10" sourceRef="Task_Validar" targetRef="Task_Duplicados" />
+    <bpmn:sequenceFlow id="Flow_11" sourceRef="Task_Duplicados" targetRef="Task_Consolidar" />
+    <bpmn:sequenceFlow id="Flow_12" sourceRef="Task_Consolidar" targetRef="Task_Resumen" />
+    <bpmn:sequenceFlow id="Flow_13" sourceRef="Task_Resumen" targetRef="Task_Revisar" />
+    <bpmn:sequenceFlow id="Flow_14" sourceRef="Task_Revisar" targetRef="Task_Filtros" />
+    <bpmn:sequenceFlow id="Flow_15" sourceRef="Task_Filtros" targetRef="Task_AplicarFiltros" />
+    <bpmn:sequenceFlow id="Flow_16" sourceRef="Task_AplicarFiltros" targetRef="Gateway_Salidas" />
+    <bpmn:sequenceFlow id="Flow_17" sourceRef="Gateway_Salidas" targetRef="Task_Excel" />
+    <bpmn:sequenceFlow id="Flow_18" sourceRef="Gateway_Salidas" targetRef="Task_Observaciones" />
+    <bpmn:sequenceFlow id="Flow_19" sourceRef="Task_Excel" targetRef="Gateway_Unir" />
+    <bpmn:sequenceFlow id="Flow_20" sourceRef="Task_Observaciones" targetRef="Gateway_Unir" />
+    <bpmn:sequenceFlow id="Flow_21" sourceRef="Gateway_Unir" targetRef="Task_Descargar" />
+    <bpmn:sequenceFlow id="Flow_22" sourceRef="Task_Descargar" targetRef="End" />
+    <bpmn:sequenceFlow id="Flow_23" sourceRef="Gateway_Admitidos" targetRef="Task_Soporte" name="No" />
+    <bpmn:sequenceFlow id="Flow_24" sourceRef="Task_Soporte" targetRef="End_Rechazo" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_ToBeV2">
+    <bpmndi:BPMNPlane id="Plane_ToBeV2" bpmnElement="Collaboration_DataClean">
+      <bpmndi:BPMNShape id="Shape_Pool_LosTiempos" bpmnElement="Pool_LosTiempos" isHorizontal="true">
+        <dc:Bounds x="0" y="0" width="3800" height="900" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Lane_Cajas" bpmnElement="Lane_Cajas" isHorizontal="true">
+        <dc:Bounds x="30" y="0" width="3770" height="200" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Lane_Contabilidad" bpmnElement="Lane_Contabilidad" isHorizontal="true">
+        <dc:Bounds x="30" y="200" width="3770" height="200" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Lane_Web" bpmnElement="Lane_Web" isHorizontal="true">
+        <dc:Bounds x="30" y="400" width="3770" height="300" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Lane_Sistemas" bpmnElement="Lane_Sistemas" isHorizontal="true">
+        <dc:Bounds x="30" y="700" width="3770" height="200" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Start" bpmnElement="Start">
+        <dc:Bounds x="100" y="90" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Cargar" bpmnElement="Task_Cargar">
+        <dc:Bounds x="200" y="65" width="150" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Estructura" bpmnElement="Task_Estructura">
+        <dc:Bounds x="400" y="470" width="150" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_ExcluirEstructuras" bpmnElement="Task_ExcluirEstructuras">
+        <dc:Bounds x="600" y="470" width="150" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Gateway_Admitidos" bpmnElement="Gateway_Admitidos">
+        <dc:Bounds x="810" y="485" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Procesar" bpmnElement="Task_Procesar">
+        <dc:Bounds x="920" y="260" width="150" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Leer" bpmnElement="Task_Leer">
+        <dc:Bounds x="1100" y="470" width="150" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Normalizar" bpmnElement="Task_Normalizar">
+        <dc:Bounds x="1280" y="470" width="150" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Clasificar" bpmnElement="Task_Clasificar">
+        <dc:Bounds x="1460" y="470" width="150" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Validar" bpmnElement="Task_Validar">
+        <dc:Bounds x="1640" y="470" width="150" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Duplicados" bpmnElement="Task_Duplicados">
+        <dc:Bounds x="1820" y="470" width="150" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Consolidar" bpmnElement="Task_Consolidar">
+        <dc:Bounds x="2000" y="470" width="150" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Resumen" bpmnElement="Task_Resumen">
+        <dc:Bounds x="2180" y="470" width="150" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Revisar" bpmnElement="Task_Revisar">
+        <dc:Bounds x="2380" y="260" width="150" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Filtros" bpmnElement="Task_Filtros">
+        <dc:Bounds x="2560" y="65" width="150" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_AplicarFiltros" bpmnElement="Task_AplicarFiltros">
+        <dc:Bounds x="2740" y="470" width="150" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Gateway_Salidas" bpmnElement="Gateway_Salidas">
+        <dc:Bounds x="2940" y="485" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Excel" bpmnElement="Task_Excel">
+        <dc:Bounds x="3090" y="420" width="150" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Observaciones" bpmnElement="Task_Observaciones">
+        <dc:Bounds x="3090" y="570" width="150" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Gateway_Unir" bpmnElement="Gateway_Unir">
+        <dc:Bounds x="3320" y="485" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Descargar" bpmnElement="Task_Descargar">
+        <dc:Bounds x="3450" y="260" width="150" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_End" bpmnElement="End">
+        <dc:Bounds x="3670" y="280" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Soporte" bpmnElement="Task_Soporte">
+        <dc:Bounds x="920" y="750" width="150" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_End_Rechazo" bpmnElement="End_Rechazo">
+        <dc:Bounds x="1130" y="770" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Edge_Flow_1" bpmnElement="Flow_1">
+        <di:waypoint x="136" y="108.0" />
+        <di:waypoint x="168.0" y="108.0" />
+        <di:waypoint x="168.0" y="105.0" />
+        <di:waypoint x="200" y="105.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_2" bpmnElement="Flow_2">
+        <di:waypoint x="350" y="105.0" />
+        <di:waypoint x="375.0" y="105.0" />
+        <di:waypoint x="375.0" y="510.0" />
+        <di:waypoint x="400" y="510.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_3" bpmnElement="Flow_3">
+        <di:waypoint x="550" y="510.0" />
+        <di:waypoint x="600" y="510.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_4" bpmnElement="Flow_4">
+        <di:waypoint x="750" y="510.0" />
+        <di:waypoint x="810" y="510.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_5" bpmnElement="Flow_5">
+        <di:waypoint x="860" y="510.0" />
+        <di:waypoint x="890.0" y="510.0" />
+        <di:waypoint x="890.0" y="300.0" />
+        <di:waypoint x="920" y="300.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_6" bpmnElement="Flow_6">
+        <di:waypoint x="1070" y="300.0" />
+        <di:waypoint x="1085.0" y="300.0" />
+        <di:waypoint x="1085.0" y="510.0" />
+        <di:waypoint x="1100" y="510.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_7" bpmnElement="Flow_7">
+        <di:waypoint x="1250" y="510.0" />
+        <di:waypoint x="1280" y="510.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_8" bpmnElement="Flow_8">
+        <di:waypoint x="1430" y="510.0" />
+        <di:waypoint x="1460" y="510.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_9" bpmnElement="Flow_9">
+        <di:waypoint x="1610" y="510.0" />
+        <di:waypoint x="1640" y="510.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_10" bpmnElement="Flow_10">
+        <di:waypoint x="1790" y="510.0" />
+        <di:waypoint x="1820" y="510.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_11" bpmnElement="Flow_11">
+        <di:waypoint x="1970" y="510.0" />
+        <di:waypoint x="2000" y="510.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_12" bpmnElement="Flow_12">
+        <di:waypoint x="2150" y="510.0" />
+        <di:waypoint x="2180" y="510.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_13" bpmnElement="Flow_13">
+        <di:waypoint x="2330" y="510.0" />
+        <di:waypoint x="2355.0" y="510.0" />
+        <di:waypoint x="2355.0" y="300.0" />
+        <di:waypoint x="2380" y="300.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_14" bpmnElement="Flow_14">
+        <di:waypoint x="2530" y="300.0" />
+        <di:waypoint x="2545.0" y="300.0" />
+        <di:waypoint x="2545.0" y="105.0" />
+        <di:waypoint x="2560" y="105.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_15" bpmnElement="Flow_15">
+        <di:waypoint x="2710" y="105.0" />
+        <di:waypoint x="2725.0" y="105.0" />
+        <di:waypoint x="2725.0" y="510.0" />
+        <di:waypoint x="2740" y="510.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_16" bpmnElement="Flow_16">
+        <di:waypoint x="2890" y="510.0" />
+        <di:waypoint x="2940" y="510.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_17" bpmnElement="Flow_17">
+        <di:waypoint x="2990" y="510.0" />
+        <di:waypoint x="3040.0" y="510.0" />
+        <di:waypoint x="3040.0" y="460.0" />
+        <di:waypoint x="3090" y="460.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_18" bpmnElement="Flow_18">
+        <di:waypoint x="2990" y="510.0" />
+        <di:waypoint x="3040.0" y="510.0" />
+        <di:waypoint x="3040.0" y="610.0" />
+        <di:waypoint x="3090" y="610.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_19" bpmnElement="Flow_19">
+        <di:waypoint x="3240" y="460.0" />
+        <di:waypoint x="3280.0" y="460.0" />
+        <di:waypoint x="3280.0" y="510.0" />
+        <di:waypoint x="3320" y="510.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_20" bpmnElement="Flow_20">
+        <di:waypoint x="3240" y="610.0" />
+        <di:waypoint x="3280.0" y="610.0" />
+        <di:waypoint x="3280.0" y="510.0" />
+        <di:waypoint x="3320" y="510.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_21" bpmnElement="Flow_21">
+        <di:waypoint x="3370" y="510.0" />
+        <di:waypoint x="3410.0" y="510.0" />
+        <di:waypoint x="3410.0" y="300.0" />
+        <di:waypoint x="3450" y="300.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_22" bpmnElement="Flow_22">
+        <di:waypoint x="3600" y="300.0" />
+        <di:waypoint x="3635.0" y="300.0" />
+        <di:waypoint x="3635.0" y="298.0" />
+        <di:waypoint x="3670" y="298.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_23" bpmnElement="Flow_23">
+        <di:waypoint x="860" y="510.0" />
+        <di:waypoint x="890.0" y="510.0" />
+        <di:waypoint x="890.0" y="790.0" />
+        <di:waypoint x="920" y="790.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_24" bpmnElement="Flow_24">
+        <di:waypoint x="1070" y="790.0" />
+        <di:waypoint x="1100.0" y="790.0" />
+        <di:waypoint x="1100.0" y="788.0" />
+        <di:waypoint x="1130" y="788.0" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

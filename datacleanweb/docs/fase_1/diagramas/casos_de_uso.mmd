@@ -1,0 +1,31 @@
+flowchart LR
+    CA[Cajas]
+    CO[Contabilidad]
+    SI[Sistemas]
+    subgraph SYS[Sistema de limpieza de facturación]
+        U1([CU-01 Importar archivos RF-01/02])
+        U2([CU-02 Procesar RF-03/04/07/08/09])
+        U3([CU-03 Filtrar RF-05/06])
+        U4([CU-04 Consultar resumen RF-12])
+        U5([CU-05 Exportar Excel limpio RF-10])
+        U6([CU-06 Consultar y descargar observaciones RF-11])
+        ST([Validar estructura RF-02])
+        LI([Normalizar RF-07])
+        CL([Clasificar C/P y CAJA RF-03/04])
+        DU([Detectar errores y candidatos RF-08])
+        CN([Consolidar válidos RF-09])
+        OB([Generar reporte RF-11])
+    end
+    CA --- U1
+    CA --- U3
+    CO --- U2
+    CO --- U4
+    CO --- U5
+    CO --- U6
+    SI --- U6
+    U1 -. include .-> ST
+    U2 -. include .-> LI
+    U2 -. include .-> CL
+    U2 -. include .-> DU
+    U2 -. include .-> CN
+    U6 -. include .-> OB

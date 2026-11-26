@@ -1,0 +1,28 @@
+2026-10-15 14:33:31,484 - INFO - Starting data processing cycle.
+2026-10-15 14:33:31,484 - INFO - Loading file: uploads\ventas_test.csv
+2026-10-15 14:33:31,524 - INFO - Loading file: uploads\contabilidad_test.csv
+2026-10-15 14:33:31,600 - INFO - Cleaning data for: Ventas
+2026-10-15 14:33:31,610 - INFO - Ventas: Removed 0 rows with missing key data.
+2026-10-15 14:33:31,621 - INFO - Ventas: Data cleaned. Rows remaining: 5
+2026-10-15 14:33:31,621 - INFO - Cleaning data for: Contabilidad
+2026-10-15 14:33:31,625 - INFO - Contabilidad: Removed 0 rows with missing key data.
+2026-10-15 14:33:31,631 - INFO - Contabilidad: Data cleaned. Rows remaining: 5
+2026-10-15 14:33:31,668 - INFO - Cruce Summary: Total Ventas=5, Total Contabilidad=5
+2026-10-15 14:33:31,668 - INFO - Coincidencias: 3
+2026-10-15 14:33:31,668 - INFO - Discrepancias (Solo Ventas): 2
+2026-10-15 14:33:31,668 - INFO - Discrepancias (Solo Contabilidad): 2
+2026-10-15 14:33:32,685 - INFO - Report generated successfully at: reports\Reporte_Cruce_20261015_143331.xlsx
+2026-10-15 14:55:31,035 - INFO - Starting data processing cycle.
+2026-10-15 14:55:31,039 - INFO - Loading file: uploads\ventas_test.csv
+2026-10-15 14:55:31,071 - INFO - Loading file: uploads\contabilidad_test.csv
+2026-10-15 14:55:31,086 - INFO - Cleaning data for: Ventas
+2026-10-15 14:55:31,086 - INFO - Ventas: Removed 0 rows with missing key data.
+2026-10-15 14:55:31,097 - INFO - Ventas: Data cleaned. Rows remaining: 5
+2026-10-15 14:55:31,097 - INFO - Cleaning data for: Contabilidad
+2026-10-15 14:55:31,100 - INFO - Contabilidad: Removed 0 rows with missing key data.
+2026-10-15 14:55:31,111 - INFO - Contabilidad: Data cleaned. Rows remaining: 5
+2026-10-15 14:55:31,138 - INFO - Cruce Summary: Total Ventas=5, Total Contabilidad=5
+2026-10-15 14:55:31,138 - INFO - Coincidencias: 3
+2026-10-15 14:55:31,138 - INFO - Discrepancias (Solo Ventas): 2
+2026-10-15 14:55:31,138 - INFO - Discrepancias (Solo Contabilidad): 2
+2026-10-15 14:55:31,184 - INFO - Report generated successfully at: reports\Reporte_Cruce_20261015_145531.xlsx

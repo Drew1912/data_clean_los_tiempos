@@ -1,0 +1,60 @@
+.env
+.env.*
+!.env.example
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.next/
+node_modules/
+.test-data/
+*.tsbuildinfo
+uploads/
+temporales/
+reports/
+logs/
+*.log
+
+
+
+# Next.js / React
+node_modules/
+.next/
+out/
+dist/
+coverage/
+
+# Python / Flask
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Variables de entorno y credenciales
+.env
+.env.*
+!.env.example
+
+# Logs y temporales
+*.log
+tmp/
+temp/
+
+# Archivos de facturación reales
+data/real/
+uploads/
+reports/
+exports/
+
+# PostgreSQL local
+pgdata/
+postgres_data/
+*.dump
+*.sql.gz
+
+# Configuración local
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

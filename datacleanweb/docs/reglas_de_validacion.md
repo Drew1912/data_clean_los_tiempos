@@ -1,0 +1,21 @@
+Campo / Control	Regla de validación	Acción en caso de error	Tipo de control
+NIT	Debe contener únicamente caracteres numéricos válidos, sin espacios innecesarios ni caracteres especiales. Se eliminan espacios al inicio y final antes de validar.	Registrar en el log de errores y excluir el registro del cruce automático.	Validación de formato
+Fecha	Debe corresponder a una fecha válida y encontrarse dentro del período contable evaluado. Se estandariza a un único formato.	Convertir al formato estándar cuando sea posible; si no, marcar como inconsistente y enviar a revisión.	Validación de formato y rango
+Monto	Debe ser numérico, mayor o igual a 0 y tener como máximo dos decimales. Se deben unificar separadores decimales.	Registrar el error y marcar el registro para revisión manual.	Validación numérica
+Razón Social	Se eliminan espacios duplicados y caracteres innecesarios. Puede normalizarse mayúsculas/minúsculas para facilitar su visualización. No se utiliza como llave principal del cruce.	Corregir automáticamente cuando sea posible. No detener el cruce si NIT, fecha y monto son válidos.	Normalización
+Número de factura	Debe estar presente y seguir el formato definido para la fuente. No debe presentar valores vacíos ni caracteres inválidos.	Registrar como inconsistencia y excluir del proceso si es un dato obligatorio.	Validación de integridad
+Código de autorización	Debe existir cuando el tipo de factura lo requiera y mantener el formato definido por la fuente.	Registrar la inconsistencia y enviar a revisión.	Validación de integridad
+Tipo de documento	Debe corresponder a uno de los valores permitidos por el sistema, por ejemplo: factura, nota de crédito, nota de débito, etc.	Marcar como valor no válido y enviar a revisión.	Validación de catálogo
+Moneda	Debe pertenecer al catálogo de monedas permitido y coincidir con la configuración del período procesado.	Registrar el error o convertir según reglas previamente definidas.	Validación de catálogo
+Campos obligatorios	NIT, fecha, monto y número de factura no deben estar vacíos cuando sean requeridos para el cruce.	Registrar el registro como incompleto y enviarlo al archivo de errores.	Integridad
+Filas vacías	Las filas completamente vacías no deben ingresar al procesamiento.	Eliminar automáticamente durante la fase de limpieza.	Limpieza
+Registros duplicados	No debe existir más de un registro idéntico según los campos definidos para detectar duplicidad.	Identificar y registrar el duplicado; conservar el registro válido según la regla establecida.	Integridad
+Espacios y caracteres	Eliminar espacios al inicio/final y normalizar caracteres innecesarios en campos de texto.	Normalizar automáticamente antes de la validación.	Limpieza
+Formato de columnas	Los nombres y tipos de columnas deben corresponder a la estructura esperada del archivo.	Registrar el archivo como inconsistente y detener su procesamiento si la estructura impide la carga.	Estructura
+Correspondencia Ventas–Contabilidad	El cruce principal debe realizarse utilizando NIT + Fecha + Monto, sin depender de la Razón Social.	Marcar como “Consolidado/Validado” cuando exista coincidencia; en caso contrario, registrar “Discrepancia detectada”.	Cruce de datos
+Monto entre fuentes	El monto de Ventas y el monto Contable debe coincidir exactamente después de la normalización de formato y decimales.	Registrar la diferencia y enviar el registro al reporte de discrepancias.	Conciliación
+Fecha entre fuentes	La fecha del registro de Ventas debe corresponder con la fecha del registro Contable bajo la regla definida para el período.	Registrar la discrepancia y enviar a revisión.	Conciliación
+NIT entre fuentes	El NIT del registro de Ventas debe coincidir con el NIT del registro Contable después de la normalización.	Marcar como discrepancia y registrar en el reporte final.	Conciliación
+Periodo contable	Todos los registros procesados deben pertenecer al período seleccionado para la conciliación.	Excluir del cruce y registrar como registro fuera de período.	Validación de rango
+Trazabilidad	Cada ejecución debe registrar fecha/hora, archivo procesado, cantidad de registros, errores, coincidencias y discrepancias.	Generar log de ejecución para permitir auditoría y seguimiento.	Trazabilidad
+

@@ -1,0 +1,28 @@
+sequenceDiagram
+    actor Usuario as Cajas o Contabilidad
+    participant FE as Next.js
+    participant API as Flask
+    participant DB as PostgreSQL
+    participant EX as Generador Excel
+    Usuario->>FE: Seleccionar modalidad y departamento
+    FE->>API: GET /lotes/{id}/registros?modalidad=contado&departamento=cochabamba
+    API->>DB: SELECT válidos con filtros AND y paginación
+    DB-->>API: Filas y total seleccionados
+    API-->>FE: 200 datos y metadatos de última exportación aparte
+    Usuario->>FE: Contabilidad: descargar Excel limpio
+    FE->>API: POST /lotes/{id}/exportaciones/limpios (filtros)
+    API->>DB: Consultar todos los válidos seleccionados, sin paginación
+    API->>EX: Crear Excel, texto seguro y trazabilidad
+    alt Generación correcta
+        EX-->>API: Archivo terminado y número de filas
+        API->>DB: Actualizar última exportación y filtros
+        API-->>FE: 200 binario + X-Registros-Exportados
+        FE->>FE: Ofrecer descarga y refrescar resumen
+    else Fallo de generación
+        API-->>FE: Error JSON sin actualizar exportados
+    end
+    Usuario->>FE: Descargar observaciones del lote
+    FE->>API: POST /lotes/{id}/exportaciones/observaciones
+    API->>DB: Consultar incidencias de todos los orígenes
+    API->>EX: Generar reporte separado
+    API-->>FE: 200 Excel de observaciones, sin alterar exportados limpios

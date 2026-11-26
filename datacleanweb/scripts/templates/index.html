@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motor de Cruce - Editorial Los Tiempos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --surface-color: #1e293b;
+            --primary-color: #3b82f6;
+            --primary-hover: #2563eb;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.1) 0px, transparent 50%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #60a5fa, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .upload-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 600px) {
+            .upload-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .file-input-wrapper {
+            background-color: rgba(15, 23, 42, 0.5);
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .file-input-wrapper:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .file-name {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            word-break: break-all;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn:disabled {
+            background-color: var(--border-color);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Spinner */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Results Section */
+        #results {
+            display: none;
+            margin-top: 2rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background-color: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .text-success { color: var(--success); }
+        .text-danger { color: var(--danger); }
+        .text-warning { color: var(--warning); }
+
+        .btn-download {
+            background-color: var(--success);
+        }
+        .btn-download:hover {
+            background-color: #059669;
+        }
+
+        #error-msg {
+            color: var(--danger);
+            text-align: center;
+            margin-top: 1rem;
+            display: none;
+            background-color: rgba(239, 68, 68, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Auditoría Los Tiempos</h1>
+            <p class="subtitle">Cruce automatizado de Ventas vs. Contabilidad</p>
+        </header>
+
+        <div class="card">
+            <form id="uploadForm">
+                <div class="upload-section">
+                    <div class="file-input-wrapper">
+                        <span class="file-label">📄 Archivo de Ventas</span>
+                        <input type="file" id="ventasFile" name="ventas" accept=".csv, .xlsx, .xls, .txt" required onchange="updateFileName(this, 'ventasName')">
+                        <div class="file-name" id="ventasName">Haz clic o arrastra un archivo</div>
+                    </div>
+
+                    <div class="file-input-wrapper">
+                        <span class="file-label">🧾 Archivo de Contabilidad</span>
+                        <input type="file" id="contaFile" name="contabilidad" accept=".csv, .xlsx, .xls, .txt" required onchange="updateFileName(this, 'contaName')">
+                        <div class="file-name" id="contaName">Haz clic o arrastra un archivo</div>
+                    </div>
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn">
+                    <span id="btnText">Procesar Archivos</span>
+                    <div class="spinner" id="spinner"></div>
+                </button>
+                <div id="error-msg"></div>
+            </form>
+
+            <div id="results">
+                <h3 style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">Resultados del Cruce</h3>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Registros Procesados</div>
+                        <div class="stat-value" id="val-total">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Coincidencias Exactas</div>
+                        <div class="stat-value text-success" id="val-match">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Solo en Ventas</div>
+                        <div class="stat-value text-warning" id="val-only-ventas">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Solo en Conta</div>
+                        <div class="stat-value text-danger" id="val-only-conta">-</div>
+                    </div>
+                </div>
+
+                <a id="downloadLink" href="#" class="btn btn-download" style="text-decoration: none;">
+                    ⬇️ Descargar Reporte de Discrepancias (.xlsx)
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateFileName(input, textId) {
+            const fileName = input.files[0]?.name || "Haz clic o arrastra un archivo";
+            document.getElementById(textId).textContent = fileName;
+        }
+
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const form = e.target;
+            const btn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const spinner = document.getElementById('spinner');
+            const results = document.getElementById('results');
+            const errorMsg = document.getElementById('error-msg');
+
+            // Reset UI
+            errorMsg.style.display = 'none';
+            results.style.display = 'none';
+            btn.disabled = true;
+            btnText.textContent = 'Procesando...';
+            spinner.style.display = 'block';
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch('/api/procesar', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || data.detalle || 'Error desconocido al procesar');
+                }
+
+                // Update UI with results
+                document.getElementById('val-total').textContent = 
+                    data.resultados.total_ventas_procesadas + data.resultados.total_conta_procesadas;
+                document.getElementById('val-match').textContent = data.resultados.coincidencias;
+                document.getElementById('val-only-ventas').textContent = data.resultados.discrepancias_solo_ventas;
+                document.getElementById('val-only-conta').textContent = data.resultados.discrepancias_solo_contabilidad;
+                
+                document.getElementById('downloadLink').href = data.descargar_reporte;
+                
+                results.style.display = 'block';
+
+            } catch (error) {
+                errorMsg.textContent = error.message;
+                errorMsg.style.display = 'block';
+            } finally {
+                // Restore button
+                btn.disabled = false;
+                btnText.textContent = 'Procesar Archivos';
+                spinner.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

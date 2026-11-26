@@ -1,0 +1,38 @@
+{
+  "id": "referencia_cabecera_csv_f1",
+  "version": "1",
+  "habilitado_datos_reales": false,
+  "evidencia": "Reconstruccion sintetica con encabezados de C-01; no se recibio CSV principal representativo",
+  "nivel": "cabecera",
+  "extension": ".csv",
+  "hoja": null,
+  "fila_encabezado": 1,
+  "encoding": "utf-8-sig",
+  "delimitador": ";",
+  "comillas": "\"",
+  "formatos_fecha": ["%d/%m/%Y"],
+  "formatos_numero": ["decimal_punto", "decimal_coma", "miles_punto_decimal_coma"],
+  "alias_informe": {
+    "numero_factura": ["NRO FACTURA"],
+    "fecha_factura": ["FCH. FACTURA"],
+    "nit_ci": ["NIT/CI"],
+    "monto_numeral": ["MONTO NUMERAL"],
+    "modalidad_codigo": ["C o P"],
+    "caja_codigo": ["CAJA"]
+  },
+  "alias_propuestos_no_confirmados": {
+    "numero_factura": ["NÚMERO DE FACTURA"],
+    "fecha_factura": ["FECHA DE FACTURA"],
+    "nit_ci": ["NIT / CI"],
+    "modalidad_codigo": ["C O P", "C/P"],
+    "razon_social": ["RAZON SOCIAL", "RAZÓN SOCIAL"],
+    "cuf": ["CUF"],
+    "anulado": ["ANULADO"]
+  },
+  "obligatorios": ["numero_factura", "fecha_factura", "nit_ci", "monto_numeral", "modalidad_codigo", "caja_codigo"],
+  "caja_patron": "^(?P<numero>[0-9]+)(?P<departamento>[CLS])$",
+  "cajas_observadas_informadas": ["0C", "1C"],
+  "cajas_admitidas_confirmadas": [],
+  "cuf_validador": null,
+  "conservar_columnas_adicionales": true
+}

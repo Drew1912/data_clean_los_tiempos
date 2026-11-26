@@ -1,0 +1,31 @@
+{
+  "version": "1",
+  "familia": "demo_cabecera",
+  "sintetico": true,
+  "nivel": "cabecera",
+  "alias": {
+    "numero_factura": ["NRO FACTURA", "NÚMERO DE FACTURA"],
+    "fecha_factura": ["FCH. FACTURA", "FECHA DE FACTURA"],
+    "nit_ci": ["NIT/CI", "NIT / CI"],
+    "monto_numeral": ["MONTO NUMERAL"],
+    "modalidad_codigo": ["C o P", "C O P", "C/P"],
+    "caja_codigo": ["CAJA"],
+    "razon_social": ["RAZÓN SOCIAL", "RAZON SOCIAL"],
+    "cuf": ["CUF"],
+    "anulado": ["ANULADO"]
+  },
+  "obligatorios": ["numero_factura", "fecha_factura", "nit_ci", "monto_numeral", "modalidad_codigo", "caja_codigo"],
+  "formatos_fecha": ["%d/%m/%Y", "%Y-%m-%d"],
+  "caja_patron": "^[0-9]+[CLS]$",
+  "cajas_admitidas": {"0C": "cochabamba", "1C": "cochabamba", "1L": "la_paz", "1S": "santa_cruz"},
+  "moneda": null,
+  "escala_maxima": 2,
+  "importe_minimo": "0",
+  "hojas": ["Facturas"],
+  "hojas_detalle": ["Detalle", "Productos"],
+  "encoding": "utf-8-sig",
+  "delimitador": ";",
+  "comillas": "\"",
+  "formatos_numero": ["decimal_punto", "decimal_coma", "miles_punto_decimal_coma"],
+  "advertencias": ["Perfil de demostración: catálogo y alias no validados para fuentes empresariales", "CUF y ANULADO se conservan sin validación especializada; no se realiza conciliación"]
+}

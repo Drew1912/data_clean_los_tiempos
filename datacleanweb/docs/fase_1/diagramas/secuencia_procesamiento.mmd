@@ -1,0 +1,32 @@
+sequenceDiagram
+    actor Cajas
+    actor Contabilidad
+    participant FE as Next.js
+    participant API as Flask
+    participant P as Lectura y perfiles
+    participant S as Servicios de limpieza
+    participant DB as PostgreSQL
+    Cajas->>FE: Elegir archivos y perfil por archivo
+    FE->>API: POST /api/v1/lotes (multipart)
+    API->>P: Validar límites, firma, perfil y estructura
+    P-->>API: Metadatos, hojas admitidas y rechazos
+    API->>DB: Guardar lote, archivos y observaciones de estructura
+    API-->>FE: 201 lote con aceptados/rechazados
+    Contabilidad->>FE: Procesar
+    FE->>API: POST /api/v1/lotes/{id}/procesamiento
+    API->>DB: Cambiar cargado a procesando de forma atómica
+    alt Sin archivos admitidos o ejecución ya activa
+        API-->>FE: 409 con motivo
+    else Procesamiento permitido
+        API->>P: Leer cabeceras preservando tipo y origen
+        P-->>S: Filas originales y perfil versionado
+        S->>S: Normalizar, validar, clasificar y señalar candidatos
+        S->>DB: Transacción: filas, incidencias y estado completado
+        alt Fallo técnico
+            DB-->>S: Rollback de resultados
+            S->>DB: Marcar fallido sin datos parciales
+            API-->>FE: 500/503, identificador técnico sin datos sensibles
+        else Proceso correcto
+            API-->>FE: 200 resumen y advertencias
+        end
+    end

@@ -1,0 +1,47 @@
+classDiagram
+    class Lote {
+        +id: UUID
+        +estado: EstadoLote
+        +creadoEn: datetime
+        +ultimaExportacion: Metadatos
+        +resumen() Resumen
+    }
+    class ArchivoFuente {
+        +id: UUID
+        +nombreOriginal: str
+        +perfilSnapshot: Configuracion
+        +sha256: str
+        +estado: EstadoArchivo
+    }
+    class PerfilLectura {
+        +id: str
+        +version: str
+        +nivel: str
+        +encabezado: int
+        +validarEstructura()
+    }
+    class RegistroCabecera {
+        +id: UUID
+        +numeroFactura: str
+        +fechaFactura: date
+        +nitCi: str
+        +montoNumeral: Decimal
+        +cajaCodigo: str
+        +modalidad: str
+        +departamento: str
+        +estado: str
+        +origen: ReferenciaOrigen
+    }
+    class Observacion {
+        +id: int
+        +tipo: str
+        +campo: str
+        +motivo: str
+        +grupoCandidato: str
+        +origen: ReferenciaOrigen
+    }
+    Lote "1" *-- "1..*" ArchivoFuente
+    ArchivoFuente "1" --> "1" PerfilLectura : snapshot versionado
+    ArchivoFuente "1" *-- "0..*" RegistroCabecera
+    ArchivoFuente "1" *-- "0..*" Observacion
+    RegistroCabecera "0..1" <-- "0..*" Observacion : afecta

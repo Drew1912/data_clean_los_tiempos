@@ -1,0 +1,33 @@
+flowchart TD
+    subgraph CA[Cajas]
+        A[Inicio: elegir archivos y perfiles] --> B[Cargar Excel/CSV]
+        F[Elegir modalidad y departamento]
+    end
+    subgraph SW[Sistema web: comportamiento interno]
+        B --> C{Formato y estructura reconocidos}
+        C -->|No| ER[Observación de archivo/hoja y nueva carga]
+        C -->|Detalle| DT[Informar estructura de detalle fuera del consolidado]
+        C -->|Cabecera| AC[Archivos/hojas admitidos]
+        L[Leer conservando archivo, hoja y fila]
+        L --> N[Normalizar solo cambios seguros]
+        N --> CL[Clasificar C/P y CAJA con perfil y catálogo]
+        CL --> VD[Validar campos y señalar candidatos duplicados]
+        VD --> SEP[Conservar filas y avisos, separar errores bloqueantes]
+        SEP --> CON[Consolidar válidas incluyendo avisos no bloqueantes]
+        CON --> FI[Filtrar modalidad AND departamento]
+        F --> FI
+        SEP --> RES[Resumen de filas y archivos]
+    end
+    subgraph CO[Contabilidad]
+        AC --> EJ[Solicitar procesamiento]
+        EJ --> L
+        RES --> REV[Consultar resultados y observaciones]
+        FI --> EX[Descargar Excel válido filtrado]
+        REV --> OBS[Descargar reporte separado del lote]
+        EX --> FIN[Fin: resultados trazables]
+        OBS --> FIN
+    end
+    subgraph SI[Sistemas]
+        ER --> SO[Revisar incidencia técnica sin modificar datos]
+        DT --> SO
+    end

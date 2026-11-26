@@ -1,0 +1,22 @@
+flowchart LR
+    U[Usuario en navegador] -->|HTTP local| FE
+    subgraph DC[Docker Compose]
+        FE[frontend: Next.js y TypeScript]
+        API[backend: Flask API REST]
+        subgraph PY[Módulos Python dentro del backend]
+            P[Perfiles y lectura: openpyxl / CSV]
+            V[Limpieza Decimal y validación]
+            C[Clasificación y candidatos duplicados]
+            PD[Pandas: estructura común y filtros]
+            R[Excel limpio y observaciones]
+            REP[Repositorio SQL y temporales]
+        end
+        DB[(db: PostgreSQL)]
+        FS[(Volumen privado de temporales)]
+        FE -->|Proxy /api, mismo origen| API
+        API --> P --> V --> C --> PD --> R
+        API --> REP
+        REP --> DB
+        P --> FS
+        R --> FS
+    end

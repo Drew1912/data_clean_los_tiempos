@@ -1,0 +1,68 @@
+[
+  {
+    "id": "material_sac_cabecera_xls", "descripcion": "SAC · cabecera de facturación (.xls)",
+    "extension": ".xls", "nivel": "cabecera", "hojas": ["Hoja1"], "fila_encabezado": 1,
+    "columnas_requeridas": ["numero_factura", "fecha_factura", "nit_ci", "modalidad_codigo", "caja_codigo"],
+    "alias": {
+      "numero_factura": ["NRO FACTURA"], "fecha_factura": ["FCH. FACTURA"], "nit_ci": ["NIT/CI"],
+      "modalidad_codigo": ["C ò P", "C o P", "C ó P"], "caja_codigo": ["CAJA"],
+      "razon_social": ["RAZON SOCIAL FACTURA"], "monto_numeral": ["Importe total de la factura"]
+    },
+    "nota_importe": "Confirmado por el usuario: usar Importe total de la factura. La columna G con cabecera 1 se conserva sin interpretar ni usar como respaldo"
+  },
+  {
+    "id": "material_sac_detalle_xls", "descripcion": "SAC · detalle de productos (.xls)",
+    "extension": ".xls", "nivel": "detalle", "hojas": ["Hoja1"], "fila_encabezado": 1,
+    "columnas_requeridas": ["numero_factura", "caja_codigo"],
+    "columnas_firma": ["COD. PRODUCTO", "CANTIDAD", "PRECIO UNITARIO"],
+    "obligatorios": ["numero_factura", "caja_codigo"],
+    "alias": {"numero_factura": ["Nro FACTURA"], "caja_codigo": ["CAJA"], "monto_numeral": []}
+  },
+  {
+    "id": "material_control_xlsx", "descripcion": "Control de contratos / contado · ENERO · fila 4 (.xlsx)",
+    "extension": ".xlsx", "nivel": "cabecera", "hojas": ["ENERO"], "fila_encabezado": 4,
+    "columnas_requeridas": ["numero_factura", "fecha_factura", "nit_ci", "monto_numeral"],
+    "alias": {"numero_factura": ["FACTURA"], "fecha_factura": ["FECHA"], "nit_ci": ["NIT"],
+      "monto_numeral": ["MONTO"], "razon_social": ["CLIENTE"]}
+  },
+  {
+    "id": "material_siat_xlsx", "descripcion": "SIAT · hoja1 · fila 1 (.xlsx)",
+    "extension": ".xlsx", "nivel": "cabecera", "hojas": ["hoja1"], "fila_encabezado": 1,
+    "columnas_requeridas": ["numero_factura", "fecha_factura", "nit_ci", "monto_numeral"],
+    "alias": {"numero_factura": ["Nº DE LA FACTURA", "N° DE LA FACTURA"], "fecha_factura": ["FECHA DE LA FACTURA"],
+      "nit_ci": ["NIT / CI CLIENTE"], "monto_numeral": ["IMPORTE TOTAL DE LA VENTA"], "razon_social": ["NOMBRE O RAZON SOCIAL"]}
+  },
+  {
+    "id": "febrero_control_xlsx", "descripcion": "Controles febrero · cabeceras por hoja en filas 1, 3 o 4 (.xlsx)",
+    "extension": ".xlsx", "nivel": "cabecera", "fila_encabezado": 1,
+    "hojas": ["FEBRERO", "FEBRERO-TRYSTAR", " FEBRERO CONTADO", "FEBRERO CREDITO", "credito", "contado", "CREDITO", "CONTADO"],
+    "filas_encabezado": {"credito": 3, "CREDITO": 4},
+    "columnas_requeridas": ["numero_factura", "fecha_factura", "nit_ci", "monto_numeral"],
+    "alias": {"numero_factura": ["FACTURA"], "fecha_factura": ["FECHA"], "nit_ci": ["NIT"],
+      "monto_numeral": ["MONTO"], "razon_social": ["CLIENTE"]}
+  },
+  {
+    "id": "febrero_resumen_sin_nit_xlsx", "descripcion": "Resumen febrero · Numero Factura / Total Factura · sin NIT (.xlsx)",
+    "extension": ".xlsx", "nivel": "cabecera", "hojas": ["febrero corregido"], "fila_encabezado": 1,
+    "columnas_requeridas": ["numero_factura", "fecha_factura", "monto_numeral", "razon_social"],
+    "alias": {"numero_factura": ["Numero Factura"], "fecha_factura": ["Fecha"], "monto_numeral": ["Total Factura"], "razon_social": ["Nombre"]}
+  },
+  {
+    "id": "febrero_sac_cabecera_xlsx", "descripcion": "SAC febrero · MONTO NUMERAL · cabecera (.xlsx)",
+    "extension": ".xlsx", "nivel": "cabecera", "hojas": ["Hoja1"], "fila_encabezado": 1,
+    "columnas_requeridas": ["numero_factura", "fecha_factura", "nit_ci", "modalidad_codigo", "caja_codigo", "monto_numeral"],
+    "cabeceras_repetidas_admitidas": ["ESPACIO", "0"],
+    "alias": {"numero_factura": ["NRO FACTURA"], "fecha_factura": ["FCH. FACTURA"], "nit_ci": ["NIT/CI"],
+      "modalidad_codigo": ["C ò P", "C o P", "C ó P"], "caja_codigo": ["CAJA"],
+      "razon_social": ["RAZON SOCIAL FACTURA"], "monto_numeral": ["MONTO NUMERAL"], "cuf": ["CUF"], "anulado": ["ANULADO"]},
+    "nota_importe": "Fuente nueva: columna explícita MONTO NUMERAL; no modifica el perfil SAC .xls ni rellena sus totales ausentes"
+  },
+  {
+    "id": "febrero_sac_detalle_xlsx", "descripcion": "SAC febrero · detalle de productos (.xlsx)",
+    "extension": ".xlsx", "nivel": "detalle", "hojas": ["Hoja1"], "fila_encabezado": 1,
+    "columnas_requeridas": ["numero_factura", "caja_codigo"],
+    "columnas_firma": ["COD. PRODUCTO", "CANTIDAD", "PRECIO UNITARIO"],
+    "obligatorios": ["numero_factura", "caja_codigo"],
+    "alias": {"numero_factura": ["Nro FACTURA"], "caja_codigo": ["CAJA"], "monto_numeral": []}
+  }
+]

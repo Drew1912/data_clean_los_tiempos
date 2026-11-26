@@ -1,0 +1,89 @@
+erDiagram
+    direction LR
+    USUARIO |o--o{ LOTE : creado_por
+    USUARIO |o--o{ AUDITORIA : actor
+    LOTE ||--o{ ARCHIVO : contiene
+    ARCHIVO ||--o{ REGISTRO : aporta_registros
+    ARCHIVO ||--o{ OBSERVACION : documenta
+    REGISTRO |o--o{ OBSERVACION : puede_afectar
+    USUARIO {
+        smallint id PK
+        text nombre UK
+        text rol
+        text password_hash
+        boolean activo
+        boolean puede_ver_auditoria
+        integer version_sesion
+        timestamptz creado_en
+    }
+    LOTE {
+        uuid id PK
+        smallint creado_por FK
+        text estado
+        timestamptz creado_en
+        timestamptz vence_en
+        timestamptz iniciado_en
+        timestamptz finalizado_en
+        jsonb ultima_exportacion
+    }
+    ARCHIVO {
+        uuid id PK
+        uuid lote_id FK
+        integer posicion
+        text nombre_original
+        text nombre_interno UK
+        text extension
+        bigint bytes
+        text sha256
+        text perfil_id
+        text perfil_version
+        jsonb perfil_snapshot
+        jsonb hojas
+        text estado
+    }
+    REGISTRO {
+        uuid id PK
+        uuid archivo_id FK
+        text hoja
+        integer fila
+        integer linea_fin
+        jsonb original
+        jsonb adicionales
+        jsonb cambios
+        text numero_factura
+        date fecha_factura
+        text nit_ci
+        numeric monto_numeral
+        text modalidad_codigo
+        text caja_codigo
+        text razon_social
+        text cuf
+        text anulado
+        text modalidad
+        text departamento
+        text estado
+    }
+    OBSERVACION {
+        bigint id PK
+        uuid archivo_id FK
+        uuid registro_id FK
+        text hoja
+        integer fila
+        integer linea_fin
+        text campo
+        text valor_original
+        text tipo
+        text motivo
+        text grupo_candidato
+        text regla
+    }
+    AUDITORIA {
+        bigint id PK
+        timestamptz ocurrido_en
+        smallint usuario_id FK
+        text usuario_nombre
+        text accion
+        text resultado
+        uuid lote_id
+        jsonb detalles
+    }
